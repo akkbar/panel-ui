@@ -2,6 +2,10 @@
 
 Industrial control-panel components for the web. Panel UI decorates real HTML controls instead of replacing them, so keyboard input, forms, events, and screen readers continue to work as expected.
 
+<p align="center">
+  <img src="./tests/browser/panel-ui.spec.ts-snapshots/component-catalog-chromium.png" alt="Panel UI industrial controls component catalog" width="100%" />
+</p>
+
 Available components:
 
 - panel push buttons with async states;
