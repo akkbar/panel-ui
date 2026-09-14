@@ -84,14 +84,10 @@ export interface MeterOptions extends Pick<BaseOptions, "size" | "label"> {
   tone?: PanelTone;
 }
 
-export interface AnalogMeterOptions extends MeterOptions {
-  low?: number;
-  high?: number;
-}
-
 export interface BarGraphOptions extends MeterOptions {
   orientation?: "horizontal" | "vertical";
   segments?: number;
+  textPosition?: "inside" | "top" | "right" | "bottom" | "left" | "hidden";
 }
 
 export type AlarmState = "normal" | "active" | "acknowledged" | "shelved";

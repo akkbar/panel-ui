@@ -65,6 +65,8 @@ test("form reset and direct property assignments synchronize visual state", asyn
 });
 
 test("new panel controls expose their interactive states", async ({ page }) => {
+  await expect(page.locator("#bar-demo")).toHaveAttribute("data-text-position", "bottom");
+
   await page.locator("#selector-demo select").selectOption({ label: "HAND" });
   await expect(page.locator('#selector-demo [data-position-label]')).toHaveText("HAND");
 

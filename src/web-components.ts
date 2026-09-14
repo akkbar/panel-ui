@@ -1,6 +1,5 @@
 import { panelAnnunciator } from "./annunciator";
 import { panelInput } from "./input";
-import { panelDigitalMeter } from "./meters";
 import { panelPilotLamp } from "./pilot-lamp";
 import { panelPushButton } from "./push-button";
 import { panelToggleButton } from "./toggle-button";
@@ -12,7 +11,6 @@ export interface PanelElementNames {
   optionButton: string;
   input: string;
   annunciator: string;
-  digitalMeter: string;
 }
 
 function numericAttribute(element: Element, name: string, fallback: number): number {
@@ -33,7 +31,6 @@ export function definePanelElements(prefix = "panel"): PanelElementNames {
     optionButton: `${prefix}-option-button`,
     input: `${prefix}-input`,
     annunciator: `${prefix}-annunciator`,
-    digitalMeter: `${prefix}-digital-meter`,
   };
 
   abstract class PanelElement extends HTMLElement {
@@ -104,22 +101,10 @@ export function definePanelElements(prefix = "panel"): PanelElementNames {
     }
   }
 
-  class DigitalMeterElement extends PanelElement {
-    connectedCallback() {
-      if (this.handle) return;
-      this.handle = panelDigitalMeter(this, {
-        tone: this.tone(), size: this.size(), label: this.getAttribute("label") ?? undefined,
-        min: numericAttribute(this, "min", 0), max: numericAttribute(this, "max", 100),
-        value: numericAttribute(this, "value", 0), unit: this.getAttribute("unit") ?? undefined,
-        decimals: numericAttribute(this, "decimals", 0),
-      });
-    }
-  }
-
   const definitions: Array<[string, CustomElementConstructor]> = [
     [names.pushButton, PushButtonElement], [names.pilotLamp, PilotLampElement],
     [names.optionButton, OptionButtonElement], [names.input, InputElement],
-    [names.annunciator, AnnunciatorElement], [names.digitalMeter, DigitalMeterElement],
+    [names.annunciator, AnnunciatorElement],
   ];
   definitions.forEach(([name, definition]) => { if (!customElements.get(name)) customElements.define(name, definition); });
   return names;

@@ -1,6 +1,6 @@
 import {
-  panelAcknowledgeButton, panelAnalogMeter, panelAnnunciator, panelBarGraph,
-  panelBezel, panelControlGroup, panelDigitalMeter, panelEmergencyStop,
+  panelAcknowledgeButton, panelAnnunciator, panelBarGraph,
+  panelBezel, panelControlGroup, panelEmergencyStop,
   panelFieldset, panelGauge, panelGuardedButton, panelInput, panelKeypad,
   panelNumericStepper, panelPilotLamp, panelPushButton, panelSelect, panelSelector,
   panelSurface, panelTag, panelToggle, panelToggleButton, panelUnitField,
@@ -41,10 +41,8 @@ setpointElement?.addEventListener("input", () => setpoint.setInvalid(!setpointEl
 panelSelector(document.querySelector("#selector-demo"), { tone: "white", size: "small" });
 panelEmergencyStop(document.querySelector("#estop-demo"), { size: "small", label: "Emergency stop" });
 panelGuardedButton(document.querySelector("#guarded-demo"), { size: "small", tone: "red" });
-panelAnalogMeter(document.querySelector("#analog-demo"), { min: 0, max: 16, value: 9.8, unit: "bar", decimals: 1, high: 13, size: "small", label: "Discharge pressure" });
 panelGauge(document.querySelector("#gauge-demo"), { min: 0, max: 100, value: 72, unit: "%", tone: "blue", size: "small", label: "Tank level" });
-panelDigitalMeter(document.querySelector("#digital-demo"), { min: 0, max: 3000, value: 1450, unit: "RPM", tone: "green", size: "small", label: "Motor speed" });
-panelBarGraph(document.querySelector("#bar-demo"), { min: 0, max: 100, value: 68, unit: "%", tone: "amber", size: "small", label: "Motor load" });
+panelBarGraph(document.querySelector("#bar-demo"), { min: 0, max: 100, value: 68, unit: "%", tone: "amber", size: "small", textPosition: "bottom", label: "Motor load" });
 const alarm = panelAnnunciator(document.querySelector("#alarm-demo"), { state: "active", tone: "red", size: "small", label: "Motor trip" });
 panelAcknowledgeButton(document.querySelector("#ack-demo"), { size: "xsmall" });
 document.querySelector("#ack-demo")?.addEventListener("click", () => alarm.acknowledge());

@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file. The format 
 - Automatic visual synchronization for direct native property assignments.
 - GitHub Actions workflows for continuous integration and npm releases.
 - Rotary selector switches, emergency stops, and guarded push buttons.
-- Analog meters, digital meters, gauges, and segmented bar graphs.
+- Circular gauges and segmented bar graphs with configurable text placement.
 - Alarm annunciators and acknowledgement buttons.
 - Numeric steppers, keypads, styled selects, and unit-suffix fields.
 - Panel surface, bezel, fieldset, and control-group layout primitives.

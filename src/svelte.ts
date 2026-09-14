@@ -1,6 +1,6 @@
 import {
-  panelAcknowledgeButton, panelAnalogMeter, panelAnnunciator, panelBarGraph,
-  panelBezel, panelControlGroup, panelDigitalMeter, panelEmergencyStop,
+  panelAcknowledgeButton, panelAnnunciator, panelBarGraph,
+  panelBezel, panelControlGroup, panelEmergencyStop,
   panelFieldset, panelGauge, panelGuardedButton, panelInput, panelKeypad,
   panelNumericStepper, panelPilotLamp, panelPushButton, panelSelect,
   panelSelector, panelSurface, panelTag, panelToggle, panelToggleButton,
@@ -29,8 +29,6 @@ export const tag = action(panelTag);
 export const selector = action(panelSelector);
 export const emergencyStop = action(panelEmergencyStop);
 export const guardedButton = action(panelGuardedButton);
-export const analogMeter = action(panelAnalogMeter);
-export const digitalMeter = action(panelDigitalMeter);
 export const gauge = action(panelGauge);
 export const barGraph = action(panelBarGraph);
 export const annunciator = action(panelAnnunciator);

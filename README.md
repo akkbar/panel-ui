@@ -11,7 +11,7 @@ Available components:
 - device, signal, and alarm tag labels;
 - calculator-style input fields using regular monospace text;
 - rotary selectors, emergency stops, and guarded buttons;
-- analog meters, digital meters, gauges, and bar graphs;
+- circular gauges and bar graphs;
 - alarm annunciators and acknowledgement buttons;
 - numeric steppers, keypads, selects, and unit fields;
 - panel, bezel, fieldset, and control-group layout primitives;
@@ -30,7 +30,6 @@ Import the functions you need and the shared stylesheet:
 ```ts
 import {
   panelInput,
-  panelAnalogMeter,
   panelAnnunciator,
   panelEmergencyStop,
   panelSelector,
@@ -449,47 +448,48 @@ trip.isGuardOpen();
 
 The first pointer activation opens the cover; a subsequent activation reaches the button. Escape closes the cover. The returned handle also includes every push-button method, including `runAsync()`.
 
-## Meters and process indication
+## Gauge and bar graph
 
 All meters clamp values to `min` and `max`, expose `role="meter"` with the matching ARIA range, and return a handle with `setValue()`, `getValue()`, and `destroy()`.
 
 ```html
-<div id="pressure"></div>
-<div id="speed"></div>
 <div id="level"></div>
 <div id="load"></div>
 ```
 
 ```ts
-const pressure = panelAnalogMeter(document.querySelector("#pressure"), {
-  min: 0, max: 16, value: 9.8, unit: "bar", decimals: 1,
-  low: 2, high: 13, label: "Discharge pressure",
-});
-
-const speed = panelDigitalMeter(document.querySelector("#speed"), {
-  min: 0, max: 3000, value: 1450, unit: "RPM",
-});
-
 const level = panelGauge(document.querySelector("#level"), {
   min: 0, max: 100, value: 72, unit: "%", tone: "blue",
 });
 
 const load = panelBarGraph(document.querySelector("#load"), {
   min: 0, max: 100, value: 68, unit: "%",
-  orientation: "horizontal", segments: 12,
+  orientation: "horizontal",
+  segments: 12,
+  textPosition: "bottom",
 });
 
-pressure.setValue(10.2);
+level.setValue(75);
+load.setValue(70);
 ```
 
 | Component | Distinct options |
 | --- | --- |
-| `panelAnalogMeter` | `low`, `high` alarm-zone thresholds |
-| `panelDigitalMeter` | compact numeric readout |
 | `panelGauge` | circular fill gauge |
-| `panelBarGraph` | `orientation: "horizontal" \| "vertical"`, `segments` |
+| `panelBarGraph` | `orientation`, `segments`, `textPosition` |
 
 Shared meter options are `min`, `max`, `value`, `unit`, `decimals`, `tone`, `size`, and `label`.
+
+Bar-graph text can be positioned independently of its orientation:
+
+| `textPosition` | Result |
+| --- | --- |
+| `"inside"` | Centered over the bar; default |
+| `"top"` | Above the bar |
+| `"right"` | To the right of the bar |
+| `"bottom"` | Below the bar |
+| `"left"` | To the left of the bar |
+| `"hidden"` | Value text is not rendered visually; meter ARIA values remain available |
 
 ## Alarm annunciator
 
@@ -644,7 +644,7 @@ Vue exports `PanelPushButton`, `PanelPilotLamp`, `PanelInput`, `PanelOptionButto
 <i use:pilotLamp={{ tone: "green", status: "on", label: "Running" }}></i>
 ```
 
-Svelte actions are exported for every core control using camel-case names such as `emergencyStop`, `analogMeter`, `numericStepper`, `unitField`, and `controlGroup`. Updating action options safely destroys and reapplies the control.
+Svelte actions are exported for every core control using camel-case names such as `emergencyStop`, `gauge`, `barGraph`, `numericStepper`, `unitField`, and `controlGroup`. Updating action options safely destroys and reapplies the control.
 
 ### Web Components
 
@@ -661,7 +661,6 @@ definePanelElements();
 <panel-option-button name="mode" value="auto" checked>AUTO</panel-option-button>
 <panel-input value="1450" width="180"></panel-input>
 <panel-annunciator state="active">MOTOR TRIP</panel-annunciator>
-<panel-digital-meter value="1450" max="3000" unit="RPM"></panel-digital-meter>
 ```
 
 `definePanelElements(prefix?)` is idempotent and returns the registered tag names. Pass a lowercase prefix such as `"plant"` to register `plant-push-button` and the related elements. Registration must run in a browser environment.

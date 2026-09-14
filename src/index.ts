@@ -6,14 +6,13 @@ export { panelOptionButton, panelToggleButton } from "./toggle-button";
 export { panelInput } from "./input";
 export { panelSelector } from "./selector";
 export { panelEmergencyStop, panelGuardedButton } from "./emergency";
-export { panelAnalogMeter, panelBarGraph, panelDigitalMeter, panelGauge } from "./meters";
+export { panelBarGraph, panelGauge } from "./meters";
 export { panelAcknowledgeButton, panelAnnunciator } from "./annunciator";
 export { panelKeypad, panelNumericStepper, panelSelect, panelUnitField } from "./data-entry";
 export { panelBezel, panelControlGroup, panelFieldset, panelSurface } from "./layout";
 export type {
   AsyncButtonOptions,
   AlarmState,
-  AnalogMeterOptions,
   AnnunciatorOptions,
   BarGraphOptions,
   BaseOptions,

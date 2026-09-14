@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  panelAnalogMeter, panelAnnunciator, panelBarGraph, panelControlGroup,
-  panelDigitalMeter, panelEmergencyStop, panelGauge, panelGuardedButton,
+  panelAnnunciator, panelBarGraph, panelControlGroup,
+  panelEmergencyStop, panelGauge, panelGuardedButton,
   panelInput, panelKeypad, panelNumericStepper, panelPilotLamp, panelPushButton,
   panelSelect, panelSelector, panelTag, panelToggle, panelToggleButton, panelUnitField,
 } from "./index";
@@ -215,8 +215,8 @@ describe("panel-ui", () => {
     expect(el.classList.contains("pnl-guarded-button")).toBe(false);
   });
 
-  it("clamps analog, digital, gauge, and bar meter values", () => {
-    const factories = [panelAnalogMeter, panelDigitalMeter, panelGauge, panelBarGraph];
+  it("clamps gauge and bar-graph values", () => {
+    const factories = [panelGauge, panelBarGraph];
     factories.forEach((factory) => {
       const el = document.createElement("div");
       const meter = factory(el, { min: 10, max: 20, value: 15, unit: "A" });
@@ -224,6 +224,17 @@ describe("panel-ui", () => {
       expect(meter.getValue()).toBe(20);
       expect(el.getAttribute("aria-valuenow")).toBe("20");
     });
+  });
+
+  it("positions or hides bar-graph text", () => {
+    const bottom = document.createElement("div");
+    panelBarGraph(bottom, { value: 42, unit: "%", textPosition: "bottom" });
+    expect(bottom.dataset.textPosition).toBe("bottom");
+    expect(bottom.querySelector("output")?.textContent).toBe("42 %");
+
+    const hidden = document.createElement("div");
+    panelBarGraph(hidden, { textPosition: "hidden" });
+    expect(hidden.dataset.textPosition).toBe("hidden");
   });
 
   it("acknowledges and clears an active alarm", () => {
