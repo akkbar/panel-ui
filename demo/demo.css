@@ -1,0 +1,37 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: #e8ece8; background: #16191a; font-family: Inter, system-ui, sans-serif; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .16; background-image: repeating-linear-gradient(0deg, transparent 0 3px, #fff 4px); mix-blend-mode: overlay; }
+main { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 56px 0 80px; }
+.masthead { display: flex; align-items: end; justify-content: space-between; gap: 48px; margin-bottom: 32px; }
+.eyebrow, .section-title, .panel-bar, .panel-footer { font: 600 10px/1 "IBM Plex Mono", monospace; letter-spacing: .14em; }
+h1 { margin: 8px 0 0; font: 700 clamp(42px, 8vw, 82px)/.85 Inter, sans-serif; letter-spacing: -.07em; }
+h1 span { color: #ffc239; }
+.masthead p { max-width: 430px; margin: 0; color: #9fa8a5; font-size: 15px; line-height: 1.6; }
+.panel { overflow: hidden; border: 1px solid #0b0d0d; border-radius: 5px; background: #303638; box-shadow: 0 24px 60px #0008, inset 0 1px #ffffff20; }
+.panel-bar, .panel-footer { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; color: #aab2af; background: #202426; border-bottom: 1px solid #111; }
+.panel-state { display: flex; align-items: center; gap: 12px; color: #dce2de; }
+.panel-footer { border-top: 1px solid #50585a; border-bottom: 0; }
+.panel-footer code { color: #929c99; }
+.bay { min-height: 320px; padding: 48px; background-image: radial-gradient(#141717 1px, transparent 1px); background-size: 7px 7px; }
+.bay-main { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 48px; align-items: center; }
+.control-group { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.control-group.center { align-items: center; }
+.control-group small { color: #8d9693; font: 500 8px "IBM Plex Mono", monospace; letter-spacing: .08em; }
+.lamp-stack { display: flex; gap: 28px; padding-left: 8px; }
+.lamp-stack div, .button-rack > div { display: grid; justify-items: center; gap: 15px; }
+.lamp-stack b, .button-rack b { color: #c8cfcc; font: 700 9px "IBM Plex Mono", monospace; letter-spacing: .12em; }
+.button-rack { display: flex; align-items: center; justify-content: flex-end; gap: 30px; }
+.catalog { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 26px; border: 1px solid #343a3b; }
+.section-title { grid-column: 1 / -1; display: flex; justify-content: space-between; padding: 14px 16px; color: #9da6a3; border-bottom: 1px solid #343a3b; }
+.section-title b { color: #ffc239; }
+.catalog article { min-height: 270px; padding: 22px; border-right: 1px solid #343a3b; }
+.catalog article:nth-of-type(3n) { border-right: 0; }
+.catalog article:nth-of-type(-n+3) { border-bottom: 1px solid #343a3b; }
+.index { color: #89938f; font: 600 9px "IBM Plex Mono", monospace; }
+.catalog h2 { margin: 34px 0 10px; font-size: 16px; }
+.catalog p { min-height: 64px; margin: 0 0 28px; color: #88928f; font-size: 12px; line-height: 1.55; }
+.lamp-row { display: flex; gap: 24px; padding: 10px; }
+.option-row, .input-row { display: flex; align-items: center; gap: 18px; }
+.input-row b { color: #818b87; font: 700 9px "IBM Plex Mono", monospace; letter-spacing: .1em; }
+@media (max-width: 780px) { .masthead { align-items: flex-start; flex-direction: column; gap: 20px; } .bay-main { grid-template-columns: 1fr; } .button-rack { justify-content: center; } .catalog { grid-template-columns: 1fr 1fr; } .catalog article, .catalog article:nth-of-type(3n) { border-right: 1px solid #343a3b; border-bottom: 1px solid #343a3b; } .catalog article:nth-of-type(2n) { border-right: 0; } .catalog article:nth-last-of-type(-n+2) { border-bottom: 0; } }
+@media (max-width: 480px) { main { width: min(100% - 24px, 1120px); padding-top: 32px; } .bay { padding: 38px 20px; } .button-rack { gap: 15px; } .catalog { grid-template-columns: 1fr; } .catalog article, .catalog article:nth-of-type(2n), .catalog article:nth-last-of-type(-n+2) { border-right: 0; border-bottom: 1px solid #343a3b; } .catalog article:last-child { border-bottom: 0; } }

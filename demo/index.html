@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel UI — Industrial Controls</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="./demo.css" />
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div><span class="eyebrow">INDUSTRIAL INTERFACE SYSTEM / 01</span><h1>Panel<span>UI</span></h1></div>
+      <p>Web controls with the weight, clarity, and instant feedback of a physical control panel.</p>
+    </header>
+
+    <section class="panel" aria-label="Motor control panel">
+      <div class="panel-bar"><span>MCC—04</span><span class="panel-state"><i id="system-lamp"></i> SYSTEM READY</span></div>
+      <div class="bay bay-main">
+        <div class="control-group">
+          <span id="tag-p101">P—101</span>
+          <div class="lamp-stack">
+            <div><i id="run-lamp"></i><b>RUN</b></div>
+            <div><i id="trip-lamp"></i><b>TRIP</b></div>
+          </div>
+        </div>
+        <div class="control-group center">
+          <label id="auto-toggle"><input type="checkbox" checked /><span>AUTO MODE</span></label>
+          <small>LOCAL / REMOTE CONTROL</small>
+        </div>
+        <div class="button-rack">
+          <div><button id="start-button">START</button><b>START</b></div>
+          <div><button id="stop-button">STOP</button><b>STOP</b></div>
+          <div><button id="reset-button">RESET</button><b>RESET</b></div>
+        </div>
+      </div>
+      <div class="panel-footer"><span>FEED WATER PUMP</span><code>400V · 30kW · 50Hz</code></div>
+    </section>
+
+    <section class="catalog">
+      <div class="section-title"><span>COMPONENT CATALOG</span><b>06 CORE CONTROLS</b></div>
+      <article><span class="index">01</span><h2>Push Button</h2><p>Tactile feedback, five semantic colors, and async states.</p><button class="mini-button">ASYNC</button></article>
+      <article><span class="index">02</span><h2>Toggle Switch</h2><p>Native checkbox semantics inside an industrial switch body.</p><label id="catalog-toggle"><input type="checkbox" /><span>ENABLE</span></label></article>
+      <article><span class="index">03</span><h2>Pilot Lamp</h2><p>Off, on, fault, and blink states with restrained glow.</p><div class="lamp-row"><i class="catalog-lamp"></i><i class="catalog-lamp"></i><i class="catalog-lamp"></i></div></article>
+      <article><span class="index">04</span><h2>Tag Label</h2><p>Compact IEC-style identifiers for device and signal names.</p><span id="tag-lsh">LSH—204</span></article>
+      <article><span class="index">05</span><h2>Option Button</h2><p>Push-button selection backed by native radio inputs.</p><div class="option-row"><label class="mode-option"><input type="radio" name="mode" value="auto" checked><span>AUTO</span></label><label class="mode-option"><input type="radio" name="mode" value="manual"><span>MAN</span></label></div></article>
+      <article><span class="index">06</span><h2>Input Field</h2><p>Recessed calculator-style display with regular mono text.</p><div class="input-row"><input id="setpoint-input" type="number" value="1450" min="0" max="3000" aria-label="Motor speed setpoint"><b>RPM</b></div></article>
+    </section>
+  </main>
+  <script type="module" src="./demo.ts"></script>
+</body>
+</html>
