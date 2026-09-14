@@ -329,17 +329,17 @@
   display: grid;
   place-items: center;
   width: calc(180px * var(--pnl-unit));
-  height: calc(128px * var(--pnl-unit));
+  height: calc(90px * var(--pnl-unit));
   overflow: hidden;
   border: calc(7px * var(--pnl-unit)) solid #161919;
-  border-radius: calc(6px * var(--pnl-unit));
-  background: radial-gradient(ellipse at 50% 106%, #e7eadf 0 55%, #aeb4aa 56% 72%, #282d2d 73%);
+  border-radius: calc(90px * var(--pnl-unit)) calc(90px * var(--pnl-unit)) 0 0;
+  background: radial-gradient(circle at 50% 100%, #e7eadf 0 81%, #aeb4aa 82% 88%, #282d2d 89%);
   box-shadow: 0 0 0 3px #71797a, 0 6px 11px #0009, inset 0 3px 8px #0006;
 }
-.pnl-meter-scale { position: absolute; inset: 12% 10% 12%; border-radius: 50% 50% 0 0; background: repeating-conic-gradient(from 300deg at 50% 100%, #222 0 1deg, transparent 1deg 10deg); clip-path: polygon(0 0,100% 0,100% 72%,0 72%); }
-.pnl-meter-needle { position: absolute; left: 50%; bottom: 13%; width: calc(3px * var(--pnl-unit)); height: calc(76px * var(--pnl-unit)); border-radius: 3px; background: #d5221b; box-shadow: 1px 1px 2px #0008; transform: translateX(-50%) rotate(var(--pnl-meter-angle)); transform-origin: 50% 100%; transition: transform 280ms cubic-bezier(.2,.8,.2,1); }
-.pnl-analog-meter output { position: absolute; bottom: 8%; color: #171b1a; background: #d9ddd4; padding: 2px 8px; font: 700 calc(11px * var(--pnl-unit))/1 var(--pnl-font); }
-.pnl-analog-meter small { position: absolute; bottom: 28%; color: #3b4240; font: 600 calc(8px * var(--pnl-unit))/1 var(--pnl-font); }
+.pnl-meter-scale { position: absolute; inset: 9% 8% 5%; border-radius: 50% 50% 0 0; background: repeating-conic-gradient(from 300deg at 50% 100%, #222 0 1deg, transparent 1deg 10deg); clip-path: polygon(0 0, 100% 0, 100% 77%, 0 77%); }
+.pnl-meter-needle { position: absolute; left: 50%; bottom: 12%; width: calc(3px * var(--pnl-unit)); height: calc(62px * var(--pnl-unit)); border-radius: 3px; background: #d5221b; box-shadow: 1px 1px 2px #0008; transform: translateX(-50%) rotate(var(--pnl-meter-angle)); transform-origin: 50% 100%; transition: transform 280ms cubic-bezier(.2,.8,.2,1); }
+.pnl-analog-meter output { position: absolute; z-index: 2; bottom: 5%; color: #171b1a; background: #d9ddd4; padding: 2px 8px; font: 700 calc(11px * var(--pnl-unit))/1 var(--pnl-font); }
+.pnl-analog-meter small { position: absolute; right: 12%; z-index: 2; bottom: 9%; color: #3b4240; font: 600 calc(8px * var(--pnl-unit))/1 var(--pnl-font); }
 .pnl-analog-meter[data-zone="high"] { --pnl-accent: var(--pnl-red); }
 .pnl-analog-meter[data-zone="low"] { --pnl-accent: var(--pnl-blue); }
 .pnl-digital-meter {
