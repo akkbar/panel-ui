@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { panelInput, panelPilotLamp, panelPushButton, panelTag, panelToggle, panelToggleButton } from "./index";
+import {
+  panelAnalogMeter, panelAnnunciator, panelBarGraph, panelControlGroup,
+  panelDigitalMeter, panelEmergencyStop, panelGauge, panelGuardedButton,
+  panelInput, panelKeypad, panelNumericStepper, panelPilotLamp, panelPushButton,
+  panelSelect, panelSelector, panelTag, panelToggle, panelToggleButton, panelUnitField,
+} from "./index";
+import { definePanelElements } from "./web-components";
 
 describe("panel-ui", () => {
   beforeEach(() => { document.body.innerHTML = ""; });
@@ -176,5 +182,110 @@ describe("panel-ui", () => {
     panelTag(el, { kind: "alarm", description: "Motor trip" });
     expect(el.dataset.kind).toBe("alarm");
     expect(el.dataset.description).toBe("Motor trip");
+  });
+
+  it("controls a multi-position rotary selector", () => {
+    const el = document.createElement("div");
+    el.innerHTML = '<select><option value="off">OFF</option><option value="auto">AUTO</option><option value="hand">HAND</option></select><span data-position-label></span>';
+    const selector = panelSelector(el);
+    selector.setValue("hand");
+    expect(selector.getIndex()).toBe(2);
+    expect(el.style.getPropertyValue("--pnl-selector-angle")).toBe("55deg");
+    expect(el.querySelector("span")?.textContent).toBe("HAND");
+  });
+
+  it("latches and releases an emergency stop", () => {
+    const button = document.createElement("button");
+    const stop = panelEmergencyStop(button);
+    button.click();
+    expect(stop.isEngaged()).toBe(true);
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    stop.release();
+    expect(stop.isEngaged()).toBe(false);
+  });
+
+  it("requires a guarded button cover to be opened", () => {
+    const el = document.createElement("div");
+    el.innerHTML = "<button>TRIP</button>";
+    const guarded = panelGuardedButton(el);
+    el.querySelector("button")?.click();
+    expect(guarded.isGuardOpen()).toBe(true);
+    guarded.closeGuard();
+    guarded.destroy();
+    expect(el.classList.contains("pnl-guarded-button")).toBe(false);
+  });
+
+  it("clamps analog, digital, gauge, and bar meter values", () => {
+    const factories = [panelAnalogMeter, panelDigitalMeter, panelGauge, panelBarGraph];
+    factories.forEach((factory) => {
+      const el = document.createElement("div");
+      const meter = factory(el, { min: 10, max: 20, value: 15, unit: "A" });
+      meter.setValue(30);
+      expect(meter.getValue()).toBe(20);
+      expect(el.getAttribute("aria-valuenow")).toBe("20");
+    });
+  });
+
+  it("acknowledges and clears an active alarm", () => {
+    const el = document.createElement("div");
+    el.textContent = "MOTOR TRIP";
+    const alarm = panelAnnunciator(el, { state: "active" });
+    alarm.acknowledge();
+    expect(alarm.getState()).toBe("acknowledged");
+    alarm.clear();
+    expect(el.dataset.state).toBe("normal");
+  });
+
+  it("steps a native number input and dispatches input", () => {
+    const el = document.createElement("div");
+    el.innerHTML = '<button data-step="down"></button><input type="number" value="2" step="2"><button data-step="up"></button>';
+    let events = 0;
+    el.querySelector("input")?.addEventListener("input", () => { events += 1; });
+    const stepper = panelNumericStepper(el);
+    stepper.stepUp();
+    expect(stepper.getValue()).toBe(4);
+    expect(events).toBe(1);
+  });
+
+  it("enters and clears values with a keypad", () => {
+    const target = document.createElement("input");
+    const el = document.createElement("div");
+    const keypad = panelKeypad(el, { target, keys: ["1", "2", "C"] });
+    el.querySelector<HTMLButtonElement>('[data-key="1"]')?.click();
+    el.querySelector<HTMLButtonElement>('[data-key="2"]')?.click();
+    expect(target.value).toBe("12");
+    keypad.clear();
+    expect(target.value).toBe("");
+  });
+
+  it("controls select and unit-field values", () => {
+    const select = document.createElement("select");
+    select.innerHTML = '<option value="a">A</option><option value="b">B</option>';
+    const selectHandle = panelSelect(select);
+    selectHandle.setValue("b");
+    expect(selectHandle.getValue()).toBe("b");
+    const field = document.createElement("label");
+    field.innerHTML = '<input><span data-unit>bar</span>';
+    const unit = panelUnitField(field, { unit: "kPa" });
+    unit.setValue("125");
+    expect(field.textContent).toContain("kPa");
+    expect(unit.getValue()).toBe("125");
+  });
+
+  it("configures a control-group layout", () => {
+    const el = document.createElement("div");
+    const handle = panelControlGroup(el, { columns: 3, gap: 12, variant: "recessed" });
+    expect(el.style.getPropertyValue("--pnl-group-columns")).toBe("3");
+    expect(el.dataset.variant).toBe("recessed");
+    handle.destroy();
+    expect(el.classList.contains("pnl-control-group")).toBe(false);
+  });
+
+  it("registers and mounts the Web Component wrappers", () => {
+    const names = definePanelElements("testpanel");
+    const element = document.createElement(names.pushButton);
+    element.textContent = "START";
+    document.body.append(element);
+    expect(element.querySelector("button")?.classList.contains("pnl-push-button")).toBe(true);
   });
 });

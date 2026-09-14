@@ -9,7 +9,13 @@ Available components:
 - toggle push buttons for checkboxes, radio buttons, and option groups;
 - pilot lamps with steady, fault, and blinking states;
 - device, signal, and alarm tag labels;
-- calculator-style input fields using regular monospace text.
+- calculator-style input fields using regular monospace text;
+- rotary selectors, emergency stops, and guarded buttons;
+- analog meters, digital meters, gauges, and bar graphs;
+- alarm annunciators and acknowledgement buttons;
+- numeric steppers, keypads, selects, and unit fields;
+- panel, bezel, fieldset, and control-group layout primitives;
+- React, Vue, Svelte, and Web Component integration layers.
 
 The core library has no runtime dependencies. All visuals are provided by a single stylesheet.
 
@@ -24,6 +30,10 @@ Import the functions you need and the shared stylesheet:
 ```ts
 import {
   panelInput,
+  panelAnalogMeter,
+  panelAnnunciator,
+  panelEmergencyStop,
+  panelSelector,
   panelOptionButton,
   panelPilotLamp,
   panelPushButton,
@@ -369,6 +379,293 @@ inputElement?.addEventListener("input", () => {
 
 The invalid state changes the outline and caret to red and applies `aria-invalid="true"`. Native number spinners are visually hidden, while `min`, `max`, `step`, keyboard entry, and browser validation remain active.
 
+## Rotary selector
+
+`panelSelector()` turns a native select into a maintained rotary switch. The hidden select remains the source of truth for forms and accessibility.
+
+```html
+<label id="mode-selector">
+  <select name="mode" aria-label="Operating mode">
+    <option value="off">OFF</option>
+    <option value="auto" selected>AUTO</option>
+    <option value="hand">HAND</option>
+  </select>
+  <span data-position-label></span>
+</label>
+```
+
+```ts
+const mode = panelSelector(document.querySelector("#mode-selector"), {
+  tone: "white",
+  size: "medium",
+  startAngle: -55,
+  endAngle: 55,
+});
+
+mode.setValue("hand");
+mode.setIndex(1);
+mode.setDisabled(false);
+```
+
+The optional `[data-position-label]` node is kept synchronized with the selected option text.
+
+## Safety controls
+
+### Emergency stop
+
+```ts
+const emergency = panelEmergencyStop(document.querySelector("#emergency"), {
+  size: "large",
+  engaged: false,
+  latching: true,
+  label: "Emergency stop",
+});
+
+emergency.engage();
+emergency.release();
+emergency.setEngaged(true);
+emergency.isEngaged();
+```
+
+Use a native button. A latching emergency stop toggles on click and exposes its state through `aria-pressed`. This visual control does not replace certified safety hardware or a safety PLC.
+
+### Guarded push button
+
+```html
+<div id="guarded-trip"><button type="button">TRIP</button></div>
+```
+
+```ts
+const trip = panelGuardedButton(document.querySelector("#guarded-trip"), {
+  tone: "red",
+  open: false,
+  disabled: false,
+});
+
+trip.openGuard();
+trip.closeGuard();
+trip.isGuardOpen();
+```
+
+The first pointer activation opens the cover; a subsequent activation reaches the button. Escape closes the cover. The returned handle also includes every push-button method, including `runAsync()`.
+
+## Meters and process indication
+
+All meters clamp values to `min` and `max`, expose `role="meter"` with the matching ARIA range, and return a handle with `setValue()`, `getValue()`, and `destroy()`.
+
+```html
+<div id="pressure"></div>
+<div id="speed"></div>
+<div id="level"></div>
+<div id="load"></div>
+```
+
+```ts
+const pressure = panelAnalogMeter(document.querySelector("#pressure"), {
+  min: 0, max: 16, value: 9.8, unit: "bar", decimals: 1,
+  low: 2, high: 13, label: "Discharge pressure",
+});
+
+const speed = panelDigitalMeter(document.querySelector("#speed"), {
+  min: 0, max: 3000, value: 1450, unit: "RPM",
+});
+
+const level = panelGauge(document.querySelector("#level"), {
+  min: 0, max: 100, value: 72, unit: "%", tone: "blue",
+});
+
+const load = panelBarGraph(document.querySelector("#load"), {
+  min: 0, max: 100, value: 68, unit: "%",
+  orientation: "horizontal", segments: 12,
+});
+
+pressure.setValue(10.2);
+```
+
+| Component | Distinct options |
+| --- | --- |
+| `panelAnalogMeter` | `low`, `high` alarm-zone thresholds |
+| `panelDigitalMeter` | compact numeric readout |
+| `panelGauge` | circular fill gauge |
+| `panelBarGraph` | `orientation: "horizontal" \| "vertical"`, `segments` |
+
+Shared meter options are `min`, `max`, `value`, `unit`, `decimals`, `tone`, `size`, and `label`.
+
+## Alarm annunciator
+
+```ts
+const motorTrip = panelAnnunciator(document.querySelector("#motor-trip"), {
+  state: "active",
+  tone: "red",
+  label: "Motor trip",
+});
+
+panelAcknowledgeButton(document.querySelector("#acknowledge"), {
+  size: "small",
+});
+
+document.querySelector("#acknowledge")?.addEventListener("click", () => {
+  motorTrip.acknowledge();
+});
+
+motorTrip.setState("shelved");
+motorTrip.clear();
+```
+
+Alarm states are `normal`, `active`, `acknowledged`, and `shelved`. Active alarms flash; acknowledged alarms remain steady. The acknowledgement control is a specialized amber push button, so application code decides which alarms it acknowledges.
+
+## Data-entry controls
+
+### Numeric stepper
+
+```html
+<div id="setpoint-stepper">
+  <button type="button" data-step="down" aria-label="Decrease">-</button>
+  <input type="number" value="50" min="0" max="100" step="5" />
+  <button type="button" data-step="up" aria-label="Increase">+</button>
+</div>
+```
+
+```ts
+const stepper = panelNumericStepper(document.querySelector("#setpoint-stepper"), {
+  step: 5,
+  tone: "green",
+});
+stepper.stepUp();
+stepper.stepDown();
+stepper.setValue(75);
+```
+
+It dispatches a bubbling native `input` event after each step.
+
+### Keypad
+
+```ts
+const keypad = panelKeypad(document.querySelector("#keypad"), {
+  target: document.querySelector<HTMLInputElement>("#keypad-value")!,
+  allowDecimal: true,
+  tone: "blue",
+  // keys: ["1", "2", "3", "C"] // optional custom layout
+});
+
+keypad.clear();
+keypad.setDisabled(true);
+```
+
+The default keypad provides digits, clear, and either decimal or backspace. A custom `"↵"` key dispatches `change`. Every edit dispatches a bubbling `input` event.
+
+### Select and unit suffix
+
+```ts
+const range = panelSelect(document.querySelector("#range"), {
+  tone: "amber",
+  width: 180,
+});
+range.setValue("0-25");
+
+const pressure = panelUnitField(document.querySelector("#pressure-field"), {
+  unit: "bar",
+  tone: "green",
+  width: 160,
+});
+pressure.setUnit("kPa");
+```
+
+`panelSelect()` accepts a native `<select>`. `panelUnitField()` expects a wrapper containing an `<input>` and optionally a `[data-unit]` element; it creates the suffix node when absent.
+
+## Layout primitives
+
+The layout helpers add consistent control-panel surfaces without taking ownership of child controls.
+
+```html
+<section id="panel">
+  <div id="bezel">
+    <fieldset id="pump-fieldset">
+      <legend>FEED PUMP</legend>
+      <div id="pump-controls">...</div>
+    </fieldset>
+  </div>
+</section>
+```
+
+```ts
+panelSurface(document.querySelector("#panel"), { variant: "raised" });
+panelBezel(document.querySelector("#bezel"), { variant: "recessed" });
+panelFieldset(document.querySelector("#pump-fieldset"), { variant: "flat" });
+panelControlGroup(document.querySelector("#pump-controls"), {
+  columns: 3,
+  gap: 20,
+});
+```
+
+Every layout accepts `variant: "flat" | "raised" | "recessed"` and an optional accessible `label`. A control group additionally accepts `columns` and a pixel `gap`.
+
+## Framework integrations
+
+Framework adapters are separate entry points. React and Vue are optional peer dependencies; importing the core does not install or load either framework.
+
+### React
+
+```tsx
+import { PanelPilotLamp, PanelPushButton, usePanelControl } from "panel-ui/react";
+import "panel-ui/style.css";
+
+<PanelPushButton options={{ tone: "green", size: "big" }}>START</PanelPushButton>
+<PanelPilotLamp options={{ tone: "green", status: "on", label: "Running" }} />
+```
+
+The package also exports `PanelInput`, `PanelToggle`, and `PanelOptionButton`. Each component accepts an `options` prop plus the corresponding native HTML attributes. Its ref exposes `{ element, handle }`. Use `usePanelControl(attach, options)` for any core function not represented by a component.
+
+### Vue
+
+```vue
+<script setup lang="ts">
+import { PanelPilotLamp, PanelPushButton } from "panel-ui/vue";
+import "panel-ui/style.css";
+</script>
+
+<template>
+  <PanelPushButton :options="{ tone: 'green' }">START</PanelPushButton>
+  <PanelPilotLamp :options="{ status: 'on', label: 'Running' }" />
+</template>
+```
+
+Vue exports `PanelPushButton`, `PanelPilotLamp`, `PanelInput`, `PanelOptionButton`, and the generic `usePanelControl()` composable. Component refs expose the underlying element and handle.
+
+### Svelte
+
+```svelte
+<script lang="ts">
+  import { pushButton, pilotLamp, selector } from "panel-ui/svelte";
+  import "panel-ui/style.css";
+</script>
+
+<button use:pushButton={{ tone: "green" }}>START</button>
+<i use:pilotLamp={{ tone: "green", status: "on", label: "Running" }}></i>
+```
+
+Svelte actions are exported for every core control using camel-case names such as `emergencyStop`, `analogMeter`, `numericStepper`, `unitField`, and `controlGroup`. Updating action options safely destroys and reapplies the control.
+
+### Web Components
+
+```ts
+import { definePanelElements } from "panel-ui/web-components";
+import "panel-ui/style.css";
+
+definePanelElements();
+```
+
+```html
+<panel-push-button tone="green" size="big">START</panel-push-button>
+<panel-pilot-lamp tone="red" status="blink" label="Motor trip"></panel-pilot-lamp>
+<panel-option-button name="mode" value="auto" checked>AUTO</panel-option-button>
+<panel-input value="1450" width="180"></panel-input>
+<panel-annunciator state="active">MOTOR TRIP</panel-annunciator>
+<panel-digital-meter value="1450" max="3000" unit="RPM"></panel-digital-meter>
+```
+
+`definePanelElements(prefix?)` is idempotent and returns the registered tag names. Pass a lowercase prefix such as `"plant"` to register `plant-push-button` and the related elements. Registration must run in a browser environment.
+
 ## Shared options
 
 The controls accept some or all of the following shared options:
@@ -436,6 +733,15 @@ lamp.destroy();
 | Pilot lamp | `setStatus`, `destroy` |
 | Tag | `destroy` |
 | Input | `setValue`, `getValue`, `setDisabled`, `setInvalid`, `focus`, `destroy` |
+| Selector | `setIndex`, `getIndex`, `setValue`, `getValue`, `setDisabled`, `destroy` |
+| Emergency stop | `setEngaged`, `isEngaged`, `engage`, `release`, `destroy` |
+| Guarded button | push-button methods plus `openGuard`, `closeGuard`, `isGuardOpen` |
+| Any meter | `setValue`, `getValue`, `destroy` |
+| Annunciator | `setState`, `getState`, `acknowledge`, `clear`, `destroy` |
+| Numeric stepper | `stepUp`, `stepDown`, `setValue`, `getValue`, `setDisabled`, `destroy` |
+| Keypad | `setDisabled`, `clear`, `destroy` |
+| Select | `setValue`, `getValue`, `setDisabled`, `destroy` |
+| Unit field | input methods plus `setUnit` |
 
 ## Theme and CSS variables
 
@@ -470,6 +776,10 @@ Panel UI does not load an external font. If IBM Plex Mono is unavailable, it fal
 - Focus rings follow each component's semantic tone.
 - Buttons receive `aria-busy="true"` while loading.
 - Pilot lamps announce status changes through a polite live region.
+- Selectors and selects retain native selection, form, and keyboard semantics.
+- Meters expose their minimum, maximum, and current values through ARIA.
+- Annunciators use an assertive status region for alarm-state changes.
+- Emergency-stop state is represented by `aria-pressed`.
 - Animations stop when the user enables `prefers-reduced-motion`.
 - Do not communicate state through color alone. Pair lamps with labels such as `RUN`, `TRIP`, and `FAULT`.
 
@@ -484,6 +794,10 @@ import type {
   InputAlignment,
   InputFieldOptions,
   InputHandle,
+  AlarmState,
+  AnnunciatorHandle,
+  MeterHandle,
+  SelectorHandle,
   LampStatus,
   PanelNamedSize,
   PanelPixelSize,
@@ -498,21 +812,9 @@ import type {
 
 ## Current coverage and roadmap
 
-The existing component set covers the basic binary controls, status indication, identification, and data-entry needs of a small control panel. Form resets and direct native property assignments are synchronized automatically. The test suite covers unit behavior, browser interaction, serious/critical axe violations, and full-page visual regression. CI and tagged npm release workflows are included.
+The component set covers binary and multi-position controls, status and alarm indication, process meters, data entry, and nested panel layouts. Form resets and direct native property assignments are synchronized where native controls are used. The test suite covers core behavior, browser interaction, serious/critical axe violations, and full-page visual regression. CI and tagged npm release workflows are included.
 
-The following areas are not implemented yet:
-
-- rotary selector switches and maintained multi-position switches;
-- emergency-stop and guarded push-button variants;
-- analog meters, digital readouts, gauges, and bar graphs;
-- alarm annunciators, acknowledgement controls, and buzzer indicators;
-- keypad, numeric stepper, select, and input-unit add-ons;
-- panel, bezel, fieldset, and control-group layout primitives;
-- React, Vue, Svelte, and Web Component wrappers;
-- cross-browser coverage beyond the current Chromium regression suite;
-- final repository URL and author identity in the npm metadata.
-
-Before a public release, add the repository URL and author identity, then configure the `NPM_TOKEN` GitHub Actions secret. Rotary selectors, emergency-stop controls, and meter components are the most useful next additions for broader industrial-panel coverage.
+Potential future additions include buzzer and horn indicators, trend charts, valve and motor symbols, and cross-browser visual baselines beyond Chromium.
 
 ## Development
 
@@ -538,12 +840,7 @@ dist/            ESM build and declaration files
 
 The CI workflow runs type checking, unit tests, the production build, browser interactions, axe accessibility checks, and visual regression tests on every pull request and push to `main`.
 
-Before the first release:
-
-1. initialize the project as a Git repository and push it to its final remote;
-2. add `author`, `repository`, `homepage`, and `bugs` fields to `package.json` using the real project identity;
-3. add an `NPM_TOKEN` repository secret with publish access;
-4. confirm the desired package name is still available immediately before publishing.
+Before a release, confirm that the package name is available and that the repository `NPM_TOKEN` secret has publish access.
 
 To release a version, update `CHANGELOG.md`, create a matching npm version tag, and push it:
 

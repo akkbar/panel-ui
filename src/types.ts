@@ -58,3 +58,75 @@ export interface TagOptions extends Pick<BaseOptions, "size" | "label"> {
   description?: string;
   kind?: "device" | "signal" | "alarm";
 }
+
+export interface SelectorOptions extends BaseOptions {
+  tone?: PanelTone;
+  startAngle?: number;
+  endAngle?: number;
+}
+
+export interface EmergencyStopOptions extends BaseOptions {
+  engaged?: boolean;
+  latching?: boolean;
+}
+
+export interface GuardedButtonOptions extends BaseOptions {
+  tone?: PanelTone;
+  open?: boolean;
+}
+
+export interface MeterOptions extends Pick<BaseOptions, "size" | "label"> {
+  min?: number;
+  max?: number;
+  value?: number;
+  unit?: string;
+  decimals?: number;
+  tone?: PanelTone;
+}
+
+export interface AnalogMeterOptions extends MeterOptions {
+  low?: number;
+  high?: number;
+}
+
+export interface BarGraphOptions extends MeterOptions {
+  orientation?: "horizontal" | "vertical";
+  segments?: number;
+}
+
+export type AlarmState = "normal" | "active" | "acknowledged" | "shelved";
+
+export interface AnnunciatorOptions extends Pick<BaseOptions, "size" | "label"> {
+  state?: AlarmState;
+  tone?: PanelTone;
+}
+
+export interface NumericStepperOptions extends BaseOptions {
+  tone?: PanelTone;
+  step?: number;
+}
+
+export interface KeypadOptions extends Pick<BaseOptions, "size" | "label" | "disabled"> {
+  target: HTMLInputElement;
+  keys?: string[];
+  tone?: PanelTone;
+  allowDecimal?: boolean;
+}
+
+export interface SelectOptions extends BaseOptions {
+  tone?: PanelTone;
+  width?: number | `${number}px`;
+}
+
+export interface UnitFieldOptions extends InputFieldOptions {
+  unit: string;
+}
+
+export interface LayoutOptions extends Pick<BaseOptions, "label"> {
+  variant?: "flat" | "raised" | "recessed";
+}
+
+export interface ControlGroupOptions extends LayoutOptions {
+  columns?: number;
+  gap?: number;
+}

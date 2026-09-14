@@ -1,4 +1,10 @@
-import { panelInput, panelPilotLamp, panelPushButton, panelTag, panelToggle, panelToggleButton } from "../src";
+import {
+  panelAcknowledgeButton, panelAnalogMeter, panelAnnunciator, panelBarGraph,
+  panelBezel, panelControlGroup, panelDigitalMeter, panelEmergencyStop,
+  panelFieldset, panelGauge, panelGuardedButton, panelInput, panelKeypad,
+  panelNumericStepper, panelPilotLamp, panelPushButton, panelSelect, panelSelector,
+  panelSurface, panelTag, panelToggle, panelToggleButton, panelUnitField,
+} from "../src";
 
 panelPilotLamp(document.querySelector("#system-lamp"), { tone: "green", status: "on", size: "small", label: "System" });
 const runLamp = panelPilotLamp(document.querySelector("#run-lamp"), { tone: "green", status: "on", label: "Pump running" });
@@ -31,3 +37,26 @@ document.querySelectorAll<HTMLElement>(".mode-option").forEach((option) => panel
 const setpointElement = document.querySelector<HTMLInputElement>("#setpoint-input");
 const setpoint = panelInput(setpointElement, { tone: "green", size: "small", width: 150 });
 setpointElement?.addEventListener("input", () => setpoint.setInvalid(!setpointElement.checkValidity()));
+
+panelSelector(document.querySelector("#selector-demo"), { tone: "white", size: "small" });
+panelEmergencyStop(document.querySelector("#estop-demo"), { size: "small", label: "Emergency stop" });
+panelGuardedButton(document.querySelector("#guarded-demo"), { size: "small", tone: "red" });
+panelAnalogMeter(document.querySelector("#analog-demo"), { min: 0, max: 16, value: 9.8, unit: "bar", decimals: 1, high: 13, size: "small", label: "Discharge pressure" });
+panelGauge(document.querySelector("#gauge-demo"), { min: 0, max: 100, value: 72, unit: "%", tone: "blue", size: "small", label: "Tank level" });
+panelDigitalMeter(document.querySelector("#digital-demo"), { min: 0, max: 3000, value: 1450, unit: "RPM", tone: "green", size: "small", label: "Motor speed" });
+panelBarGraph(document.querySelector("#bar-demo"), { min: 0, max: 100, value: 68, unit: "%", tone: "amber", size: "small", label: "Motor load" });
+const alarm = panelAnnunciator(document.querySelector("#alarm-demo"), { state: "active", tone: "red", size: "small", label: "Motor trip" });
+panelAcknowledgeButton(document.querySelector("#ack-demo"), { size: "xsmall" });
+document.querySelector("#ack-demo")?.addEventListener("click", () => alarm.acknowledge());
+panelNumericStepper(document.querySelector("#stepper-demo"), { tone: "green", size: "small", step: 5 });
+const keypadTarget = document.querySelector<HTMLInputElement>("#keypad-target")!;
+panelInput(keypadTarget, { tone: "blue", size: "xsmall", width: 150, align: "right" });
+panelKeypad(document.querySelector("#keypad-demo"), { target: keypadTarget, tone: "blue", size: "xsmall", allowDecimal: true });
+panelSelect(document.querySelector("#select-demo"), { tone: "amber", size: "xsmall", width: 170 });
+panelUnitField(document.querySelector("#unit-demo"), { unit: "bar", tone: "green", size: "xsmall", width: 130 });
+panelSurface(document.querySelector("#surface-demo"), { variant: "raised", label: "Pump control surface" });
+panelBezel(document.querySelector("#bezel-demo"), { variant: "recessed" });
+panelFieldset(document.querySelector("#fieldset-demo"), { variant: "flat" });
+panelControlGroup(document.querySelector("#group-demo"), { columns: 2, gap: 18 });
+panelPilotLamp(document.querySelector(".layout-lamp"), { status: "on", tone: "green", size: "xsmall", label: "Running" });
+panelPushButton(document.querySelector(".layout-button"), { tone: "green", size: "xsmall" });

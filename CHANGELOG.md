@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-14
+
 ### Added
 
 - Browser-level interaction tests with Playwright.
@@ -12,6 +14,12 @@ All notable changes to this project will be documented in this file. The format 
 - Automatic synchronization after native form resets.
 - Automatic visual synchronization for direct native property assignments.
 - GitHub Actions workflows for continuous integration and npm releases.
+- Rotary selector switches, emergency stops, and guarded push buttons.
+- Analog meters, digital meters, gauges, and segmented bar graphs.
+- Alarm annunciators and acknowledgement buttons.
+- Numeric steppers, keypads, styled selects, and unit-suffix fields.
+- Panel surface, bezel, fieldset, and control-group layout primitives.
+- React components and hook, Vue components and composable, Svelte actions, and Web Components.
 
 ## [0.1.0] - 2026-09-14
 

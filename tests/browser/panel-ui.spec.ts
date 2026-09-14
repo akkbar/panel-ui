@@ -63,3 +63,20 @@ test("form reset and direct property assignments synchronize visual state", asyn
   await expect(page.locator("#option")).toHaveAttribute("data-checked", "false");
   await expect(field).toHaveValue("default");
 });
+
+test("new panel controls expose their interactive states", async ({ page }) => {
+  await page.locator("#selector-demo select").selectOption({ label: "HAND" });
+  await expect(page.locator('#selector-demo [data-position-label]')).toHaveText("HAND");
+
+  await page.locator("#estop-demo").click();
+  await expect(page.locator("#estop-demo")).toHaveAttribute("data-engaged", "true");
+
+  await page.locator('#stepper-demo [data-step="up"]').click();
+  await expect(page.locator("#stepper-demo input")).toHaveValue("55");
+
+  await page.locator("#ack-demo").click();
+  await expect(page.locator("#alarm-demo")).toHaveAttribute("data-state", "acknowledged");
+
+  await page.locator('#keypad-demo [data-key="7"]').click();
+  await expect(page.locator("#keypad-target")).toHaveValue("7");
+});

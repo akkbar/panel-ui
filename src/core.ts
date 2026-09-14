@@ -93,7 +93,7 @@ export function watchElementState(
 
 /** Native reset values are applied after the reset event begins. Queueing the sync
  * updates the component after the browser has restored default form values. */
-export function watchFormReset(input: HTMLInputElement, sync: () => void): Handle {
+export function watchFormReset(input: HTMLInputElement | HTMLSelectElement, sync: () => void): Handle {
   const form = input.form;
   const onReset = () => queueMicrotask(sync);
   form?.addEventListener("reset", onReset);

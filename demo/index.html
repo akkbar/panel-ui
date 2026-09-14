@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -48,6 +48,19 @@
       <article><span class="index">04</span><h2>Tag Label</h2><p>Compact IEC-style identifiers for device and signal names.</p><span id="tag-lsh">LSH—204</span></article>
       <article><span class="index">05</span><h2>Option Button</h2><p>Push-button selection backed by native radio inputs.</p><div class="option-row"><label class="mode-option"><input type="radio" name="mode" value="auto" checked><span>AUTO</span></label><label class="mode-option"><input type="radio" name="mode" value="manual"><span>MAN</span></label></div></article>
       <article><span class="index">06</span><h2>Input Field</h2><p>Recessed calculator-style display with regular mono text.</p><div class="input-row"><input id="setpoint-input" type="number" value="1450" min="0" max="3000" aria-label="Motor speed setpoint"><b>RPM</b></div></article>
+    </section>
+
+    <section class="extended-catalog" aria-labelledby="extended-title">
+      <div class="section-title" id="extended-title"><span>PROCESS INSTRUMENTS &amp; LAYOUT</span><b>12 NEW CONTROLS</b></div>
+      <article><span class="index">07</span><h2>Rotary Selector</h2><div id="selector-demo"><select aria-label="Operating mode"><option>OFF</option><option selected>AUTO</option><option>HAND</option></select><span data-position-label></span></div></article>
+      <article><span class="index">08</span><h2>Safety Controls</h2><div class="safety-row"><button id="estop-demo">E-STOP</button><div id="guarded-demo"><button>TRIP</button></div></div></article>
+      <article class="meter-card"><span class="index">09</span><h2>Analog &amp; Gauge</h2><div class="meter-row"><div id="analog-demo"></div><div id="gauge-demo"></div></div></article>
+      <article><span class="index">10</span><h2>Digital &amp; Bar</h2><div class="meter-column"><div id="digital-demo"></div><div id="bar-demo"></div></div></article>
+      <article><span class="index">11</span><h2>Alarm Annunciator</h2><div class="alarm-stack"><div id="alarm-demo">MOTOR TRIP</div><button id="ack-demo">ACK</button></div></article>
+      <article><span class="index">12</span><h2>Numeric Stepper</h2><div id="stepper-demo"><button data-step="down" aria-label="Decrease">−</button><input type="number" value="50" min="0" max="100" step="5" aria-label="Setpoint"><button data-step="up" aria-label="Increase">+</button></div></article>
+      <article><span class="index">13</span><h2>Keypad</h2><input id="keypad-target" aria-label="Keypad value" readonly><div id="keypad-demo"></div></article>
+      <article><span class="index">14</span><h2>Select &amp; Unit</h2><div class="data-stack"><select id="select-demo" aria-label="Pressure range"><option>0–10 bar</option><option>0–25 bar</option></select><label id="unit-demo"><input type="number" value="6.4" aria-label="Pressure"><span data-unit></span></label></div></article>
+      <article class="layout-card"><span class="index">15</span><h2>Layout Primitives</h2><div id="surface-demo"><div id="bezel-demo"><fieldset id="fieldset-demo"><legend>FEED PUMP</legend><div id="group-demo"><i class="layout-lamp"></i><button class="layout-button">RUN</button></div></fieldset></div></div></article>
     </section>
   </main>
   <script type="module" src="./demo.ts"></script>

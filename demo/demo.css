@@ -33,5 +33,20 @@ h1 span { color: #ffc239; }
 .lamp-row { display: flex; gap: 24px; padding: 10px; }
 .option-row, .input-row { display: flex; align-items: center; gap: 18px; }
 .input-row b { color: #818b87; font: 700 9px "IBM Plex Mono", monospace; letter-spacing: .1em; }
+.extended-catalog { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 26px; border: 1px solid #343a3b; }
+.extended-catalog .section-title { grid-column: 1 / -1; }
+.extended-catalog article { min-height: 290px; padding: 22px; border-top: 1px solid #343a3b; border-right: 1px solid #343a3b; overflow: hidden; }
+.extended-catalog article:nth-of-type(3n) { border-right: 0; }
+.extended-catalog h2 { margin: 18px 0 26px; font-size: 16px; }
+.safety-row, .meter-row, .alarm-stack, .data-stack { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.meter-column, .data-stack, .alarm-stack { align-items: flex-start; flex-direction: column; }
+.meter-row { flex-wrap: nowrap; transform-origin: left top; }
+#keypad-target { margin-bottom: 10px; }
+.layout-card { grid-column: span 1; }
+#surface-demo { padding: 12px; }
+#bezel-demo { padding: 10px; }
+#fieldset-demo { margin: 0; padding: 12px; }
+@media (max-width: 780px) { .extended-catalog { grid-template-columns: 1fr 1fr; } .extended-catalog article, .extended-catalog article:nth-of-type(3n) { border-right: 1px solid #343a3b; } .extended-catalog article:nth-of-type(2n) { border-right: 0; } }
+@media (max-width: 480px) { .extended-catalog { grid-template-columns: 1fr; } .extended-catalog article, .extended-catalog article:nth-of-type(2n) { border-right: 0; } }
 @media (max-width: 780px) { .masthead { align-items: flex-start; flex-direction: column; gap: 20px; } .bay-main { grid-template-columns: 1fr; } .button-rack { justify-content: center; } .catalog { grid-template-columns: 1fr 1fr; } .catalog article, .catalog article:nth-of-type(3n) { border-right: 1px solid #343a3b; border-bottom: 1px solid #343a3b; } .catalog article:nth-of-type(2n) { border-right: 0; } .catalog article:nth-last-of-type(-n+2) { border-bottom: 0; } }
 @media (max-width: 480px) { main { width: min(100% - 24px, 1120px); padding-top: 32px; } .bay { padding: 38px 20px; } .button-rack { gap: 15px; } .catalog { grid-template-columns: 1fr; } .catalog article, .catalog article:nth-of-type(2n), .catalog article:nth-last-of-type(-n+2) { border-right: 0; border-bottom: 1px solid #343a3b; } .catalog article:last-child { border-bottom: 0; } }
